@@ -27,8 +27,8 @@ module ASAP
                               data_type = attribute_data_type(:accessors, :#{attribute_name})
                               data_converter = attribute_data_converter(:accessors, :#{attribute_name})
                               if !data_type || (!proposed_value.kind_of?(data_type) && proposed_value.class.name != data_type.name)
-                                p 'DATATYPE = ' + data_type.hash.to_s
-                                p 'VALUETYPE = ' + proposed_value.class.hash.to_s
+                                #p 'DATATYPE = ' + data_type.hash.to_s
+                                #p 'VALUETYPE = ' + proposed_value.class.hash.to_s
                                 #{variable_name} = (data_converter.kind_of?(Proc) ? data_converter.call(proposed_value) : proposed_value.send(data_converter))
                               else
                                 #{variable_name} = proposed_value
@@ -144,6 +144,7 @@ module ASAP
         end
       end
       
+      public # jps
       def to_s
         @@dictionary[:accessors][self.class].keys.map {|key| "#{key}: #{self.instance_variable_get('@'.concat(key.to_s).to_sym)}"}.join('; ')
       end
