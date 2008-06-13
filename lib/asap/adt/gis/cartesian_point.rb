@@ -3,6 +3,7 @@ module ASAP
     module GIS
       
       class CartesianPoint < CartesianObject
+        
         define_accessors :x => {:type      => Float,
                                 :required  => true,
                                 :converter => :to_f,
@@ -13,7 +14,17 @@ module ASAP
                                 :validator => lambda {|value| value > 0.0}},
                          :z => {:type      => Float,
                                 :converter => :to_f}
+               
         
+        def self.new_pt(p)
+            return if p.nil?
+            pt = self.new
+            pt.x = p.x
+            pt.y = p.y
+            pt.z = p.z
+            pt
+        end
+
         def to_s
           text = [x, y].join ", "
           text << ", #{z}" unless z.nil?
