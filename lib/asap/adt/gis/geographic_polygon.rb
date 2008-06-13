@@ -15,6 +15,11 @@ module ASAP
           vertices.size
         end
         
+        def set_vertices(gp_array)
+          gp_array.each{|gp| vertices << gp }          
+        end
+        
+        
         def to_cartesian(coordinate_system)
           # FIXME: we shouldn't have to init :unit here, ValidatableObject needs repaired
           cartesian_polygon = generate_cartesian_polygon(:coordinate_system => coordinate_system, :unit => coordinate_system.unit, :vertices => [])
