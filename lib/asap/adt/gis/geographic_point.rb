@@ -12,6 +12,15 @@ module ASAP
                          :elevation => {:type      => Elevation,
                                         :converter => lambda {|value| Elevation.new(:value => value)}}
         
+        def signed_latitude          
+          @latitude.signed_value
+        end
+        
+        def signed_longitude
+          @longitude.signed_value
+        end
+        
+        
         def to_s
           text = [longitude, latitude ].join ", "
           text << ", #{elevation}" unless elevation.nil?
