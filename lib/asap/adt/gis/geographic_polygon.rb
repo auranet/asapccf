@@ -3,9 +3,17 @@ module ASAP
     module GIS
           
       class GeographicPolygon < GeographicPointContainer
-        define_accessors :vertices  => {:type      => Array,
-                                        :default   => [],
-                                        :validator => lambda {|value| value.all? {|vertex| vertex.kind_of? GeographicPoint}}}
+        define_accessors :vertices  =>  {:type     => Array,
+                                         :default   => [],
+                                         :validator => lambda {|value| value.all? {|vertex| vertex.kind_of? GeographicPoint}}},
+                      :sub_polygons =>  {:type     => Array,
+                                         :default  => [],
+                                         :validator => lambda {|value| value.all? {|poly| poly.kind_of? GeographicPolygon}}},
+                              :area =>  {:type => Float,
+                                         :default => 0.0},
+                       :guide_lines =>  {:type => Array,
+                                         :default => [],
+                                         :validator => lambda {|value| value.all? {|vertex| vertex.kind_of? GeographicPoint}}}
         
         def to_s
           vertices.join "; "
@@ -19,6 +27,9 @@ module ASAP
           gp_array.each{|gp| vertices << gp }          
         end
         
+        def has_sub_polys
+          sub_polygons.length
+        end
         
         def to_cartesian(coordinate_system)
           # FIXME: we shouldn't have to init :unit here, ValidatableObject needs repaired

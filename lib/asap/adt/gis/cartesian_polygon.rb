@@ -18,6 +18,15 @@ module ASAP
           vertices.size
         end
         
+        def set_precision(pre=6)
+          str = "%." + pre.to_s + "f"
+          vertices.each do |v|
+            v.x = format(str, v.x)
+            v.y = format(str, v.y)
+          end
+          
+        end
+        
         def lines
           result = nil
           
