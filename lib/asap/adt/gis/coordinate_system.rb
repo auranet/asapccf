@@ -13,6 +13,14 @@ module ASAP
                          :scale         => {:type => Float,           :default  => 1.0}
         
         def allocate_resources
+          
+          #Csmap::local_coordinate_system returns ....
+          #Given a region on the ellipsoid as specified by the min_ll and max_ll arguments, CS_cslcl creates a 
+          #coordinate system based on the Transverse Mercator projection optimized for the defined region.  
+          #The datum argument must point to a datum definition structure that carries the definition of the datum to be used.  
+          #Such a pointer can be obtained from CS_dtloc.
+
+          
           raise unless @datum_pointer = Csmap::CS_dtloc(datum.to_s.upcase)
           raise unless @cs_pointer    = Csmap::local_coordinate_system(minimum_point.longitude.signed_value,
                                                                        minimum_point.latitude.signed_value,
