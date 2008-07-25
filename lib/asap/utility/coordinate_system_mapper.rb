@@ -7,8 +7,22 @@ module ASAP
       
       class << self
         
-        def batch_convert(latlong_array)
-          Csmap::convert_coordinates("LL27", "LL83", latlong_array)          
+        def set_up_conversion(from_datum_, to_datum_)          
+          @from_datum = Csmap::CS_csloc(from_datum_)
+          @to_datum   = Csmap::CS_csloc(to_datum_)
+          @dtc_prm    = Csmap::CS_dtcsu(@from_datum, @to_datum, 0, 3)
+        end
+        
+        def tear_down_conversion
+          Csmap::CS_dtcls(@dtc_prm)
+          Csmap::CS_free(@from_datum)
+          Csmap::CS_free(@to_datum)          
+        end
+        
+        
+        def batch_convert(longlat_array)
+          #Csmap::convert_coordinates("LL27", "LL83", latlong_array)
+          Csmap::convert_coordinates(@from_datum, @to_datum, @dtc_prm, longlat_array)
         end
         
         
@@ -20,9 +34,9 @@ module ASAP
         end
         
         def geographic_to_cartesian(coordinate_system, geographic_coordinates)
-          converted = nad27_to_nad83(geographic_coordinates)
-          cartesian_coordinates = Csmap::ll_to_cs(coordinate_system.cs_pointer, converted[0], converted[1])
-          #cartesian_coordinates = Csmap::ll_to_cs(coordinate_system.cs_pointer, geographic_coordinates[0], geographic_coordinates[1])
+          #converted = nad27_to_nad83(geographic_coordinates)
+          #cartesian_coordinates = Csmap::ll_to_cs(coordinate_system.cs_pointer, converted[0], converted[1])
+          cartesian_coordinates = Csmap::ll_to_cs(coordinate_system.cs_pointer, geographic_coordinates[0], geographic_coordinates[1])
           x, y = Csmap::get_ws3_conversion_coordinate(cartesian_coordinates, 0), Csmap::get_ws3_conversion_coordinate(cartesian_coordinates, 1)
           Csmap::release_ws3_conversion_coordinates(cartesian_coordinates)
           [x, y]

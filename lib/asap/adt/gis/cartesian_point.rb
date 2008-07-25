@@ -33,7 +33,7 @@ module ASAP
        
         def to_geographic(coordinate_system)
           (longitude, latitude) = ASAP::Utility::CoordinateSystemMapper::cartesian_to_geographic(coordinate_system, [x, y])
-          GeographicPoint.new(:longitude => longitude, :latitude => latitude)
+          GeographicPoint.new(:longitude => longitude, :latitude => latitude)         
         end
       end
 

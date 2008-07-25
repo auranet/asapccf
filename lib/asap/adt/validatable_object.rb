@@ -125,7 +125,7 @@ module ASAP
         valid = true
         valid &&= value.kind_of?(data_type) if data_type && !value.nil?
         valid &&= !value.nil?               if data_required
-        valid &&= validator.call(value)     if validator
+        valid &&= validator.call(value)     if validator && !value.nil?
         valid
       end
       
