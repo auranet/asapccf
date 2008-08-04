@@ -9,8 +9,13 @@ module ASAP
                                          :validator => lambda {|value| value >= 0.0}}
         
         def to_s
-          format '%.6f', value
+          format(FLOAT_FORMAT, value)
         end
+        
+        def as_precision
+          format(FLOAT_FORMAT, value).to_f
+        end
+        
       end
 
     end

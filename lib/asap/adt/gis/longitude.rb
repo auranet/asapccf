@@ -9,15 +9,19 @@ module ASAP
         define_derivers  :signed_value => {:deriver => lambda {hemisphere == :west ? -value : value}}
         
         def to_s
-          text = ''
+          text = super
           case hemisphere
             when :east
               #text << 'E'
             when :west
-              text << '-'
+              text.insert(0, '-')  #text << 'W'
           end
-          text << super
           text
+        end
+        
+        def as_precision
+          lng = super 
+          hemisphere == :east ? lng : -lng
         end
       end
 

@@ -22,7 +22,14 @@ module ASAP
         
         def batch_convert(longlat_array)
           #Csmap::convert_coordinates("LL27", "LL83", latlong_array)
-          Csmap::convert_coordinates(@from_datum, @to_datum, @dtc_prm, longlat_array)
+          pts = Csmap::convert_coordinates(@from_datum, @to_datum, @dtc_prm, longlat_array)
+          
+          # cut the number of sig figs from 11 or so to 6
+          pts.each do |p|
+            p[0] = format(FLOAT_FORMAT, p[0]).to_f
+            p[1] = format(FLOAT_FORMAT, p[1]).to_f
+          end 
+          pts
         end
         
         
