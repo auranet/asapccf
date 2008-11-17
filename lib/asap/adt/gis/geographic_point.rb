@@ -10,7 +10,17 @@ module ASAP
                                         :required  => true,
                                         :converter => lambda {|value| Longitude.new(:value => value.abs, :hemisphere => (value >= 0 ? :east : :west))}},
                          :elevation => {:type      => Elevation,
-                                        :converter => lambda {|value| Elevation.new(:value => value)}}
+                                        :converter => lambda {|value| Elevation.new(:value => value)}},
+                         :type      => {:type      => Symbol,
+                                        :default   => :O,
+                                        :validator => lambda {|value| [:C, :I, :E, :O, :P ].include?(value) }},
+                         :seq      => {:type      => Float,
+                                        :default   => 0.0,
+                                        :validator => lambda {|value| value > 0 }},
+                         :i_seq      => {:type     => Integer,
+                                        :default   => 0,
+                                        :validator => lambda {|value| value > 0 }}
+        
         
         def initialize_copy(other)
           latitude  = other.latitude.clone
@@ -26,13 +36,25 @@ module ASAP
           @longitude.value = lng.abs
         end        
                 
-#        def set_longitude(value)
-#          @longitude.value = value.abs
-#        end
-#        
-#        def set_latitude(value)
-#          @latitude.value = value.abs
-#        end
+        def type=(sym)
+          @type = sym
+        end
+        
+        def seq=(seq)
+          @seq = seq
+        end
+        
+        def seq
+          @seq
+        end
+        
+        def is_edge?
+          type == :E ? true : false
+        end                
+        
+        def is_inflection?
+          type == :I or type == :C
+        end
         
         def signed_latitude          
           @latitude.signed_value
@@ -42,8 +64,40 @@ module ASAP
           @longitude.signed_value
         end
         
+        def more_north?(other)
+          self.signed_latitude > other.signed_latitude
+        end
+        
+        def more_south?(other)
+          self.signed_latitude < other.signed_latitude
+        end
+        
+        def more_east?(other)
+          self.signed_longitude > other.signed_longitude
+        end
+        
+        def more_west?(other)
+          self.signed_longitude < other.signed_longitude
+        end
+        
+        def distance_to(other)
+           dx = self.signed_longitude - other.signed_longitude
+           dy = self.signed_latitude  - other.signed_latitude
+           Math.sqrt(dx**2 + dy**2)
+        end
+                
         def eql?(other)
-            self.signed_latitude == other.signed_latitude and self.signed_longitude == other.signed_longitude
+            #self.signed_latitude == other.signed_latitude and self.signed_longitude == other.signed_longitude
+            # one may have had formatting applied and the other not so ....
+            lng1 = format(FLOAT_FORMAT, self.signed_longitude).to_f
+            lng2 = format(FLOAT_FORMAT, other.signed_longitude).to_f
+            
+            lat1 = format(FLOAT_FORMAT, self.signed_latitude).to_f
+            lat2 = format(FLOAT_FORMAT, other.signed_latitude).to_f
+          
+            dx = lng1 - lng2
+            dy = lat1 - lat2
+            0 == dx and 0 == dy
         end
         
         def within_radius?(other, tolerance = POINT_RADIUS)
