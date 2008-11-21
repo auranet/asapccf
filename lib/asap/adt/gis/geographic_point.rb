@@ -49,7 +49,7 @@ module ASAP
         end
         
         def is_edge?
-          type == :E ? true : false
+          type == :E or type == :C
         end                
         
         def is_inflection?
