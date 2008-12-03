@@ -23,9 +23,9 @@ module ASAP
         
         
         def initialize_copy(other)
-          latitude  = other.latitude.clone
-          longitude = other.longitude.clone
-          elevation = other.elevation.clone if !elevation.nil?
+          @latitude  = other.latitude.clone
+          @longitude = other.longitude.clone
+          @elevation = other.elevation.clone if !elevation.nil?
         end
         
         def signed_latitude=(lat)
@@ -49,11 +49,11 @@ module ASAP
         end
         
         def is_edge?
-          type == :E or type == :C
+          @type == :E or @type == :C
         end                
         
         def is_inflection?
-          type == :I or type == :C
+          @type == :I or @type == :C
         end
         
         def signed_latitude          

@@ -8,12 +8,18 @@ module ASAP
                                          :converter => :to_f,
                                          :validator => lambda {|value| value >= 0.0}}
         
+        def initialize(h)
+          super
+          @value = format(FLOAT_FORMAT, h[:value].to_f).to_f
+          @hemisphere = h[:hemisphere]
+        end
+        
         def to_s
-          format(FLOAT_FORMAT, value)
+          format(FLOAT_FORMAT, @value)
         end
         
         def as_precision
-          format(FLOAT_FORMAT, value).to_f
+          format(FLOAT_FORMAT, @value).to_f
         end
         
       end
