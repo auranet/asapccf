@@ -17,6 +17,16 @@ module ClassModifications
 
 end
 
+module ArrayModifications
+  
+  def circularize
+    def self.[](i)         super(i % self.size)        end
+    def self.[]=(i, value) super(i % self.size, value) end
+    return self
+  end
+  
+end
+
 module HashModifications
   
   def augment!(hash)
@@ -96,6 +106,10 @@ module DateTimeModifications
 end
 
 # For now, just go ahead and include all the patches.
+
+class Array
+  include ArrayModifications
+end
 
 class Hash
   include HashModifications
