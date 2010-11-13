@@ -28,7 +28,7 @@ module ASAP
         end
         
         def has_sub_polys
-          sub_polygons.length
+          sub_polygons ? sub_polygons.length : 0
         end
         
         def to_cartesian(coordinate_system)
